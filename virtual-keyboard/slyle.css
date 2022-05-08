@@ -27,12 +27,17 @@ gap: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    transition: 0.5s;
 }
 .key-eng, .key-ru, .caseDown, .caseUp, .capsLock, .capsLockShift {
     display: block;
 }
 .hidden{
     display:none;
+}
+.active{
+    background-color:#5c3131;
 }
 [data-key="Backspace"], [data-key="CapsLock"],[data-key="Enter"],[data-key="ShiftLeft"], [data-key="ShiftRight"] {
     width: 112px;

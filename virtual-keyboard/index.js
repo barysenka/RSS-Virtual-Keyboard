@@ -1,6 +1,7 @@
 
 
 import objKey from './lang.js';
+import creatButton from './createButton.js';
 
 const body = document.querySelector('body');
 
@@ -33,28 +34,6 @@ description.className = 'description';
 description.innerText = 'Клавиатура создана в операционной системе Windows';
 wrapKeyboard.append(description);
 
-textareaBody.focus();
-
-//смена языка в локалсторедж
-let langLocal = 'eng';
-window.addEventListener('beforeunload', setLocalStorage)
-window.addEventListener('load', getLocalStorage)
-
-
-
-
-function setLocalStorage() {
-    localStorage.setItem('lang', langLocal);
-  }
-
-  function getLocalStorage() {
-    if(localStorage.getItem('lang')) {
-      let lang = localStorage.getItem('lang');
-      getTranslate(lang)
-    }
-  }
-
-
 for(let i = 0; i<5; i++){
     const keyboardRow = document.createElement('div');
     keyboardRow.className = 'keyboard-row';
@@ -85,58 +64,28 @@ for(let i = 0; i<5; i++){
            }
     }
 }
- 
 
-  function creatButton(objKey,num) {
+textareaBody.focus();
 
-    if (!Object.keys(objKey).length) return;
+//смена языка в локалсторедж
+let langLocal = 'eng';
+window.addEventListener('beforeunload', setLocalStorage)
+window.addEventListener('load', getLocalStorage)
 
-    const keyboardKey  = document.createElement('div');
-    keyboardKey.className = 'keyboard-key';
-   
-    for (let key in objKey.eng) {
-          
-        if ( key == num){ 
-           
-    keyboardKey.setAttribute(`data-key`, `${objKey.eng[key].name}`); 
-        }
-    }
-    for (let lang in objKey) {
-   
-        const keyLang = document.createElement('span')
-        keyLang.className = `key-${lang}`;
-        
-        for (let key in objKey[lang]) {
-          
-           if ( key == num){     
-           
-        const caseDown = document.createElement('span')
-        caseDown.className = `caseDown hidden`;
-        caseDown.innerText = `${objKey[lang][key].caseDown}`;
 
-        const caseUp = document.createElement('span')
-        caseUp.className = `caseUp hidden`;
-        caseUp.innerText = `${objKey[lang][key].caseUp}`;
-
-        const capsLock = document.createElement('span')
-        capsLock.className = `capsLock hidden`;
-        capsLock.innerText = `${objKey[lang][key].caseUp}`;
-
-        const capsLockShift = document.createElement('span')
-        capsLockShift.className = `capsLockShift hidden`;
-        capsLockShift.innerText = `${objKey[lang][key].caseDown}`;
-
-       
-        keyLang.append(caseDown);
-        keyLang.append(caseUp);
-        keyLang.append(capsLock);
-        keyLang.append(capsLockShift);
-           }
-        }
-      keyboardKey.append(keyLang);
-    }
-    return keyboardKey;
+function setLocalStorage() {
+    localStorage.setItem('lang', langLocal);
   }
+
+  function getLocalStorage() {
+    if(localStorage.getItem('lang')) {
+      let lang = localStorage.getItem('lang');
+      getTranslate(lang)
+    }
+  }
+
+
+ 
 
 
   function searchButton(obj, num) {
@@ -189,18 +138,10 @@ const keyEng = document.querySelectorAll('.key-eng')
 
 
   const keyboardKeys  = document.querySelectorAll('.keyboard-key');
+  const KeyArray = ['ShiftRight','ShiftLeft', 'ControlRight', 'ControlLeft', 'CapsLock','MetaLeft', 'Tab', 'AltRight','AltLeft', 'Enter', 'Backspace', 'Space']
   
- keyboardKeys.forEach((keyboardKey)=>{
-    keyboardKey.addEventListener('click',(event)=>{
-      
-        let lng  = localStorage.getItem('lang');
-        if ((event.currentTarget.dataset.key == 'Shift') && (event.currentTarget.dataset.key) ){
-            console.log(event.currentTarget.dataset.key)
-        }
-        textareaBody.value += searchButton(objKey[lng], event.currentTarget.dataset.key)
-      
-      })
- })
+
+
 
 
   document.addEventListener('keydown',(event)=>{
@@ -238,16 +179,11 @@ const keyEng = document.querySelectorAll('.key-eng')
 
 
 
-//шифт подсветка клавиш
 
-class ShiftKey {
-    handleEvent(event) {
-        if (event.code == 'ShiftLeft' || event.code == 'ShiftRight'){
-        let method = 'on' + event.type[0].toUpperCase() + event.type.slice(1);
-      this[method](event);
-        }
-    }
-    onKeydown() {
+
+ class ShiftKeys {
+
+    onDown() {
 
         if (langLocal == 'ru'){
             keyRu.forEach((el)=>{
@@ -262,10 +198,10 @@ class ShiftKey {
             caseUp.forEach((el)=>{
                  el.classList.remove('hidden')
             })
-
       }
+ 
 
-      onKeyup() {
+      onUp() {
         if (langLocal == 'ru'){
             keyRu.forEach((el)=>{
                 el.firstChild.classList.remove('hidden')
@@ -279,11 +215,91 @@ class ShiftKey {
             caseUp.forEach((el)=>{
                  el.classList.add('hidden')
             })
+      }
 
+      onClick() {
+        if (langLocal == 'ru'){
+            keyRu.forEach((el)=>{
+                el.firstChild.classList.toggle('hidden')
+            })
+        }
+        if (langLocal == 'eng'){
+            keyEng.forEach((el)=>{
+                el.firstChild.classList.toggle('hidden')
+            })
+        }
+            caseUp.forEach((el)=>{
+                 el.classList.toggle('hidden')
+            })
       }
 
 }
 
-let shift = new ShiftKey();
-document.addEventListener('keydown', shift)
-document.addEventListener('keyup', shift)
+let shifts = new ShiftKeys();
+function searchActiveButton(names, event) {
+    keyboardKeys.forEach((keyboardKey)=>{
+      
+        if (keyboardKey.dataset.key == names){
+            
+            if (event == 'keydown' ){
+                keyboardKey.classList.add('active')
+            }
+            if (event == 'keyup'){
+                keyboardKey.classList.remove('active')
+            }
+        }
+    })
+}
+
+document.addEventListener('keydown', (event)=>{
+   
+      searchActiveButton(event.code, 'keydown')
+
+
+       if (event.code == 'ShiftLeft' || event.code == 'ShiftRight' ){
+            shifts.onDown()
+       }
+       if (event.code == 'CapsLock'){
+        shifts.onClick()
+   }
+})
+
+document.addEventListener('keyup', (event)=>{
+
+    searchActiveButton(event.code, 'keyup')
+
+    if (event.code == 'ShiftLeft' || event.code == 'ShiftRight' ){
+         shifts.onUp()
+    }
+})
+
+keyboardKeys.forEach((keyboardKey)=>{
+    let  symbol;
+    keyboardKey.addEventListener('click',(event)=>{
+       symbol = event.currentTarget.dataset.key;
+        let lng  = localStorage.getItem('lang');
+        event.currentTarget.classList.remove('active')
+
+        if (!KeyArray.includes(symbol)){
+            textareaBody.value += searchButton(objKey[lng], symbol)
+        }
+        if (symbol == 'CapsLock'){
+            shifts.onClick()
+       }
+      })
+      keyboardKey.addEventListener('mouseup',(event)=>{
+        symbol = event.currentTarget.dataset.key;
+        event.currentTarget.classList.add('active')
+        if (symbol == 'ShiftLeft' || symbol == 'ShiftRight' ){
+             shifts.onUp()
+        }
+    })
+    keyboardKey.addEventListener('mousedown',(event)=>{
+        symbol = event.currentTarget.dataset.key;
+        event.currentTarget.classList.add('active')
+        if (symbol == 'ShiftLeft' || symbol == 'ShiftRight' ){
+             shifts.onDown()
+        }
+    })
+ })
+
