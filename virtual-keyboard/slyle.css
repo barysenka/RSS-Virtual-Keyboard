@@ -1,0 +1,54 @@
+.wrap-keyboard{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.body-keyboard{
+width: 860px;
+margin: 0 auto;
+padding: 5px;
+background: #b6b6b6;
+border: 3px solid #222222;
+border-radius: 5px;
+display: flex;
+flex-direction: column;
+gap: 5px;
+}
+.keyboard-row{
+    display: flex;
+    gap: 5px;
+}
+.keyboard-key{
+    width: 50px;
+    height: 50px;
+    border:solid 2px gray;
+    background-color: #e7e5e5;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.key-eng, .key-ru, .caseDown, .caseUp, .capsLock, .capsLockShift {
+    display: block;
+}
+.hidden{
+    display:none;
+}
+[data-key="Backspace"], [data-key="CapsLock"],[data-key="Enter"],[data-key="ShiftLeft"], [data-key="ShiftRight"] {
+    width: 112px;
+    background-color: #f8f8f8;
+} 
+
+[data-key="Backquote" ]{
+    background-color: #f8f8f8;
+    width: 40px;
+}
+[data-key="Backslash"], [data-key="Tab"]{
+    background-color: #f8f8f8;
+    width: 70px;
+}
+
+[data-key="Space"]{
+    background-color: #f8f8f8;
+    width: 392px;
+}
