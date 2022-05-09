@@ -85,19 +85,6 @@ function setLocalStorage() {
   }
 
 
- 
-
-
-  function searchButton(obj, num) {
-      
-        for (let key in obj) {
-            obj[key]
-            if (obj[key].name == num){
-                return obj[key].caseDown
-            }
-    }
-  }
-
 
 const caseDown = document.querySelectorAll('.caseDown')
 const caseUp = document.querySelectorAll('.caseUp')
@@ -152,12 +139,16 @@ const keyEng = document.querySelectorAll('.key-eng')
         if (el.classList.contains('hidden')){
             langLocal = 'ru'
             setLocalStorage();
+            el.classList.remove('hidden')
+            el.firstChild.classList.remove('hidden')
         }else{
             langLocal = 'eng'
             setLocalStorage();
+            el.classList.add('hidden')
+            el.firstChild.classList.add('hidden')
         }
-            el.classList.toggle('hidden')
-            el.firstChild.classList.toggle('hidden')
+            // el.classList.toggle('hidden')
+            // el.firstChild.classList.toggle('hidden')
         })
         keyEng.forEach((el)=>{
             el.classList.toggle('hidden')
@@ -273,20 +264,47 @@ document.addEventListener('keyup', (event)=>{
     }
 })
 
+
+function searchButton(obj, num, caseDownUp) {
+  
+    for (let key in obj) {
+        obj[key]
+        if (obj[key].name == num && caseDownUp == 'caseDown'){
+           
+            return obj[key].caseDown
+        }
+        if (obj[key].name == num && caseDownUp == 'caseUp'){
+           
+            return obj[key].caseUp
+        }
+}
+}
+
+
 keyboardKeys.forEach((keyboardKey)=>{
     let  symbol;
     keyboardKey.addEventListener('click',(event)=>{
        symbol = event.currentTarget.dataset.key;
         let lng  = localStorage.getItem('lang');
         event.currentTarget.classList.remove('active')
-
         if (!KeyArray.includes(symbol)){
-            textareaBody.value += searchButton(objKey[lng], symbol)
+            
+            if (!event.currentTarget.childNodes[0].classList.contains('hidden')){
+                let a = event.currentTarget.childNodes[0].innerText
+                let b = symbol.slice(-1)
+                    textareaBody.value += event.currentTarget.childNodes[0].innerText  
+            }
+            else if(!event.currentTarget.childNodes[1].classList.contains('hidden')){
+                let a = event.currentTarget.childNodes[1].innerText
+                let b = symbol.slice(-1)
+                    textareaBody.value += event.currentTarget.childNodes[1].innerText
+            }
         }
         if (symbol == 'CapsLock'){
             shifts.onClick()
-       }
-      })
+        }
+    })
+
       keyboardKey.addEventListener('mouseup',(event)=>{
         symbol = event.currentTarget.dataset.key;
         event.currentTarget.classList.add('active')
