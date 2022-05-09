@@ -147,8 +147,7 @@ const keyEng = document.querySelectorAll('.key-eng')
             el.classList.add('hidden')
             el.firstChild.classList.add('hidden')
         }
-            // el.classList.toggle('hidden')
-            // el.firstChild.classList.toggle('hidden')
+      
         })
         keyEng.forEach((el)=>{
             el.classList.toggle('hidden')
